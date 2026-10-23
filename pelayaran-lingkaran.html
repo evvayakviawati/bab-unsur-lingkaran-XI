@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pelayaran Sang Kompas – Gim Edukasi Lingkaran</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e9f3f1;--sf:#fff;--tx:#0b2a3a;--mu:#4d6b78;--sea:#14566b;--gold:#e8a800;--ok:#1f8a5b;--no:#c8442f;--ln:#b9d3d0;color-scheme:light;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#071c27;--sf:#0e3042;--tx:#e6f2f0;--mu:#8fb0ba;--sea:#4cc3d9;--gold:#ffc93c;--ok:#4fd18f;--no:#ff7a62;--ln:#1f4a5d;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#071c27;--sf:#0e3042;--tx:#e6f2f0;--mu:#8fb0ba;--sea:#4cc3d9;--gold:#ffc93c;--ok:#4fd18f;--no:#ff7a62;--ln:#1f4a5d;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.55 Figtree,system-ui,sans-serif}
+h1,h2,h3{font-family:'Bricolage Grotesque',Georgia,sans-serif;margin:0;line-height:1.15}
+main{max-width:680px;margin:0 auto;padding:16px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+.top h1{font-size:1.35rem}
+.pill{background:var(--sf);border:1px solid var(--ln);border-radius:99px;padding:4px 12px;font-weight:600;white-space:nowrap}
+button{font:inherit;cursor:pointer;color:inherit}
+button:focus-visible,select:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.btn{background:var(--sea);color:#fff;border:0;border-radius:10px;padding:10px 18px;font-weight:600}
+:root:not([data-theme="light"]) .btn{color:#06202b}
+.btn.alt{background:transparent;color:var(--tx);border:1px solid var(--ln)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.card{background:var(--sf);border:1px solid var(--ln);border-radius:14px;padding:16px;margin:12px 0}
+.story{font-size:.95rem;color:var(--mu)}
+svg.map{width:100%;height:auto;max-height:70vh;display:block}
+.node{cursor:pointer}.node.lock{cursor:not-allowed;opacity:.45}
+.opt{display:block;width:100%;text-align:left;background:var(--bg);border:2px solid var(--ln);border-radius:10px;padding:10px 12px;margin:8px 0}
+.opt.sel{border-color:var(--sea)}.opt.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 15%,var(--sf))}.opt.no{border-color:var(--no);background:color-mix(in srgb,var(--no) 15%,var(--sf))}
+.bar{height:8px;background:var(--ln);border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:var(--gold)}
+.fb{border-left:5px solid var(--ok);padding:8px 12px;background:var(--bg);border-radius:6px;margin-top:12px}.fb.bad{border-color:var(--no)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.chip{background:var(--sea);color:#fff;border:0;border-radius:8px;padding:6px 14px;font-weight:600;cursor:grab}
+:root:not([data-theme="light"]) .chip{color:#06202b}
+.chip.used{opacity:.3}.chip.on{outline:3px solid var(--gold)}
+.slot{display:inline-block;min-width:64px;min-height:36px;padding:3px 10px;border:2px dashed var(--mu);border-radius:8px;text-align:center;vertical-align:middle;font-weight:600}
+.slot.f{border-style:solid;border-color:var(--sea)}
+.row{display:flex;gap:8px;align-items:center;margin:8px 0}.row span{flex:1}
+select{font:inherit;background:var(--bg);color:var(--tx);border:2px solid var(--ln);border-radius:8px;padding:6px;max-width:55%}
+.tf button{border:2px solid var(--ln);background:var(--bg);border-radius:8px;padding:4px 14px;margin-left:6px}
+.tf button.sel{border-color:var(--sea);background:color-mix(in srgb,var(--sea) 18%,var(--bg))}
+.tag{font-size:.8rem;color:var(--mu);margin-bottom:4px}
+.badge{display:inline-block;background:var(--gold);color:#241a00;border-radius:99px;padding:2px 12px;font-weight:600;margin:2px 4px 2px 0}
+dialog{max-width:620px;width:92%;background:var(--sf);color:var(--tx);border:1px solid var(--ln);border-radius:14px}
+dialog::backdrop{background:#000a}
+table{border-collapse:collapse;width:100%;font-size:.92rem}td,th{border-bottom:1px solid var(--ln);padding:4px 6px;text-align:left}
+@media(prefers-reduced-motion:no-preference){.opt,.btn{transition:transform .1s}.opt:active,.btn:active{transform:scale(.98)}}
+</style>
+</head>
+<body>
+<main>
+<div class="top"><h1>Pelayaran Sang Kompas</h1><div><span class="pill" id="pts">0 poin</span> <button class="btn alt" onclick="g.showModal()">Panduan guru</button></div></div>
+<div id="app"></div>
+</main>
+<dialog id="g"><h2>Panduan Guru</h2>
+<p><b>Tujuan:</b> siswa kelas XI (Fase F) mengenali unsur lingkaran, menghubungkan sudut pusat dan sudut keliling, serta menyelesaikan soal HOTS.</p>
+<table><tr><th>Menit</th><th>Kegiatan</th></tr>
+<tr><td>0–5</td><td>Apersepsi: tunjukkan roda sepeda dan jam, ceritakan misi kapten.</td></tr>
+<tr><td>5–13</td><td>Zona 1 – Pulau Jari-Jari</td></tr>
+<tr><td>13–21</td><td>Zona 2 – Selat Sudut Pusat</td></tr>
+<tr><td>21–29</td><td>Zona 3 – Karang Sudut Keliling</td></tr>
+<tr><td>29–41</td><td>Zona 4 – Benteng Sang Kompas (boss)</td></tr>
+<tr><td>41–45</td><td>Refleksi: apa kesalahan yang paling sering muncul?</td></tr></table>
+<h3 style="margin-top:12px">Aturan pergerakan</h3>
+<p>Zona berikutnya terbuka bila siswa menjawab benar minimal <b>3 dari 4</b> tantangan. Jika belum lulus, zona diulang dan poin zona itu diatur ulang agar tidak bisa dikumpulkan berulang. Poin: 20 per soal benar (30 di boss). Lencana diberikan saat zona lulus.</p>
+<p>Gim dapat dimainkan individu atau berpasangan. Tampilkan pembahasan tiap soal sebagai bahan diskusi kelas.</p>
+<button class="btn" onclick="g.close()">Tutup</button></dialog>
+<script>
+const Z=[
+{n:'Pulau Jari-Jari',ic:'⚓',b:'Lencana Penjaga Kompas',x:70,y:60,
+ quest:'Kenali dan bedakan unsur-unsur lingkaran: jari-jari, diameter, tali busur, apotema, juring, dan tembereng.',
+ qs:[
+ {t:'mc',q:'Tali busur terpanjang pada sebuah lingkaran disebut…',o:['Jari-jari','Diameter','Apotema','Juring'],a:1,e:'Tali busur yang melalui pusat adalah diameter, dan panjangnya dua kali jari-jari.'},
+ {t:'tf',q:'Tentukan benar atau salah tiap pernyataan.',s:[['Diameter = 2 × jari-jari',1],['Apotema adalah garis dari pusat yang tegak lurus tali busur',1],['Juring adalah daerah antara tali busur dan busur',0]],e:'Daerah antara tali busur dan busur disebut tembereng. Juring dibatasi dua jari-jari dan satu busur.'},
+ {t:'mt',q:'Jodohkan unsur dengan cirinya.',l:['Jari-jari','Tali busur','Juring','Tembereng','Apotema'],r:['Ruas garis dari pusat ke titik pada lingkaran','Ruas garis penghubung dua titik pada lingkaran','Daerah dibatasi dua jari-jari dan sebuah busur','Daerah dibatasi tali busur dan sebuah busur','Jarak pusat ke tali busur'],e:'Hafalkan ciri tiap unsur, karena ciri inilah yang dipakai dalam soal cerita.'},
+ {t:'mc',q:'Lingkaran berdiameter 26 cm memiliki tali busur 24 cm. Berapa jarak pusat ke tali busur (apotema)?',o:['5 cm','7 cm','10 cm','12 cm'],a:0,e:'r = 13, setengah tali busur = 12, apotema = √(13² − 12²) = 5 cm.'}]},
+{n:'Selat Sudut Pusat',ic:'🧭',b:'Lencana Navigator Sudut',x:290,y:120,
+ quest:'Hitung panjang busur dan luas juring dengan memakai perbandingan sudut pusat terhadap 360°.',
+ qs:[
+ {t:'mc',q:'Sudut pusat 72° menghadap busur sepanjang 18 cm. Berapa keliling lingkaran itu?',o:['72 cm','90 cm','108 cm','144 cm'],a:1,e:'72/360 = 1/5, jadi keliling = 5 × 18 = 90 cm.'},
+ {t:'mcx',q:'Sudut pusat ∠AOB = 80°. Pilih SEMUA pernyataan yang benar.',o:['Sudut keliling yang menghadap busur AB (busur kecil) adalah 40°','Panjang busur AB = 2/9 keliling lingkaran','Luas juring AOB = 1/3 luas lingkaran','Pada segitiga AOB, ∠OAB = 50°'],a:[0,1,3],e:'80/360 = 2/9, bukan 1/3. Segitiga AOB sama kaki sehingga ∠OAB = (180° − 80°)/2 = 50°.'},
+ {t:'tf',q:'Tentukan benar atau salah.',s:[['Panjang busur sebanding dengan besar sudut pusatnya',1],['Sudut pusat 270° menghadap busur sepertiga keliling',0],['Jika sudut pusat digandakan, luas juring juga menjadi dua kali',1]],e:'270/360 = 3/4, bukan 1/3. Panjang busur dan luas juring selalu sebanding dengan sudut pusat.'},
+ {t:'dd',q:['Juring dengan sudut pusat 60° dan r = 21 cm (π = 22/7). Panjang busur = ',' cm dan luas juring = ',' cm².'],c:['22','231','44','462'],a:[0,1],e:'Busur = 60/360 × 2 × 22/7 × 21 = 22 cm. Luas = 1/6 × 22/7 × 21² = 231 cm².'}]},
+{n:'Karang Sudut Keliling',ic:'🪸',b:'Lencana Penjelajah Karang',x:70,y:200,
+ quest:'Terapkan hubungan sudut keliling dan sudut pusat, sudut keliling yang menghadap diameter, dan segi empat tali busur.',
+ qs:[
+ {t:'mc',q:'Sudut keliling ∠PQR = 35° menghadap busur PR. Berapa sudut pusat ∠PSR yang menghadap busur yang sama?',o:['17,5°','35°','70°','140°'],a:2,e:'Sudut pusat = 2 × sudut keliling = 70°.'},
+ {t:'tf',q:'Tentukan benar atau salah.',s:[['Sudut keliling yang menghadap diameter besarnya 90°',1],['Sudut keliling yang menghadap busur sama bisa berbeda besarnya',0],['Pada segi empat tali busur, jumlah sudut berhadapan 180°',1],['Sudut keliling selalu dua kali sudut pusat',0]],e:'Sudut keliling berukuran setengah sudut pusat dan dua sudut keliling pada busur sama selalu sama besar.'},
+ {t:'od',q:'Segitiga PQR: PQ diameter dan ∠QPR = 35°. Urutkan langkah menentukan ∠PQR.',s:['PQ diameter, maka ∠PRQ = 90°','Jumlah sudut segitiga = 180°','∠PQR = 180° − 90° − 35°','∠PQR = 55°'],e:'Mulai dari fakta sudut keliling di diameter, lalu pakai jumlah sudut segitiga.'},
+ {t:'mc',q:'Segi empat ABCD adalah segi empat tali busur. Jika ∠A = 85°, berapa ∠C?',o:['85°','95°','105°','275°'],a:1,e:'Sudut berhadapan jumlahnya 180°, jadi ∠C = 95°.'}]},
+{n:'Benteng Sang Kompas',ic:'🏰',b:'Lencana Kapten Lingkaran',x:290,y:270,boss:1,
+ quest:'Boss Battle HOTS: padukan seluruh konsep unsur lingkaran, sudut pusat, dan sudut keliling untuk mengalahkan Sang Kompas.',
+ qs:[
+ {t:'mc',q:'Titik A, B, C pada lingkaran berpusat O. ∠AOB = (3x + 10)° dan ∠ACB = (x + 25)° menghadap busur yang sama. Berapa besar ∠AOB?',o:['100°','110°','130°','150°'],a:2,e:'3x + 10 = 2(x + 25) → x = 40, jadi ∠AOB = 130°.'},
+ {t:'mcx',q:'Dari soal sebelumnya, jari-jari lingkaran 10 cm (π = 3,14). Pilih SEMUA yang benar.',o:['∠ACB = 65°','∠OAB = 25°','Panjang busur kecil AB ≈ 22,7 cm','Luas juring AOB = 1/3 luas lingkaran'],a:[0,1,2],e:'Busur = 130/360 × 62,8 ≈ 22,7 cm. Luas juring = 13/36 luas lingkaran, bukan 1/3.'},
+ {t:'dd',q:['AB diameter, ∠ABC = 2k° dan ∠CAB = 3k°. Maka ∠ACB = ','°, k = ','°, dan ∠CAB = ','°.'],c:['90','18','54','36','45'],a:[0,1,2],e:'∠ACB = 90° (menghadap diameter). 2k + 3k = 90, k = 18, jadi ∠CAB = 54°.'},
+ {t:'mt',q:'Jodohkan kondisi dengan kesimpulannya.',l:['Sudut pusat 90°','Sudut keliling menghadap diameter','Dua sudut keliling pada busur sama','Segi empat tali busur dengan ∠A = 70°'],r:['Sudut keliling = 45°','Besarnya 90°','Sama besar','∠C = 110°'],e:'Gabungkan semua sifat: sudut keliling = ½ sudut pusat, diameter → 90°, busur sama → sudut sama, sisi berhadapan → 180°.'}]}
+];
+const S={open:1,sc:[0,0,0,0],done:[0,0,0,0]},app=document.getElementById('app');let C=null,sel=null;
+const L=['A','B','C','D','E'];
+const shuf=a=>{let r;do{r=a.map((_,i)=>[Math.random(),i]).sort((x,y)=>x[0]-y[0]).map(v=>v[1])}while(a.length>1&&r.every((v,i)=>v===i));return r};
+const total=()=>S.sc.reduce((a,b)=>a+b,0);
+function head(){document.getElementById('pts').textContent=total()+' poin'}
+function mapView(){head();C=null;
+ const P='M70 60 C 200 40, 330 70, 290 120 S 20 160, 70 200 S 330 230, 290 270';
+ let s=`<div class="card story"><b>Kisah:</b> Kompas emas milik Kapten Sirkel pecah menjadi empat keping dan tersebar di empat wilayah laut. Kumpulkan semua keping dengan menaklukkan tantangan lingkaran di setiap zona, lalu hadapi Sang Kompas di benteng terakhir.</div>
+ <svg class="map" viewBox="0 0 360 330" role="img" aria-label="Peta pelayaran empat zona"><rect width="360" height="330" rx="16" fill="var(--sea)" opacity=".18"/><path d="${P}" fill="none" stroke="var(--sea)" stroke-width="4" stroke-dasharray="3 10" stroke-linecap="round"/>`;
+ Z.forEach((z,i)=>{const lk=i+1>S.open,dn=S.done[i];
+ s+=`<g class="node ${lk?'lock':''}" tabindex="0" role="button" aria-label="${z.n}${lk?' terkunci':''}" onclick="enter(${i})" onkeydown="if(event.key=='Enter')enter(${i})"><circle cx="${z.x}" cy="${z.y}" r="${z.boss?34:28}" fill="${dn?'var(--gold)':'var(--sf)'}" stroke="var(--sea)" stroke-width="3"/><text x="${z.x}" y="${z.y+9}" font-size="26" text-anchor="middle">${lk?'🔒':z.ic}</text><text x="${z.x}" y="${z.y+(z.boss?54:48)}" font-size="13" font-weight="700" text-anchor="middle" fill="var(--tx)">${z.n}</text></g>`});
+ s+='</svg>';
+ const bs=Z.filter((z,i)=>S.done[i]);
+ s+=`<div class="card"><b>Lencana:</b> ${bs.length?bs.map(z=>`<span class="badge">${z.b}</span>`).join(''):'<span class="story">Belum ada. Ketuk Pulau Jari-Jari untuk berlayar.</span>'}</div>`;
+ app.innerHTML=s}
+function enter(i){if(i+1>S.open)return;C={z:i,i:-1,ok:0,chk:0};S.sc[i]=0;next()}
+function next(){const z=Z[C.z];C.i++;C.chk=0;head();
+ if(C.i===0){return brief()}
+ if(C.i>z.qs.length)return result();
+ const q=z.qs[C.i-1];
+ C.a=q.t=='mc'?null:q.t=='mcx'?[]:q.t=='tf'?q.s.map(()=>null):q.t=='dd'?q.a.map(()=>null):q.t=='mt'?q.l.map(()=>''):shuf(q.s);
+ if(q.t=='mt')C.m=shuf(q.r);sel=null;qView()}
+function brief(){const z=Z[C.z];
+ app.innerHTML=`<div class="card"><h2>${z.ic} ${z.n}</h2><p><b>Misi utama:</b> ${z.quest}</p><p><b>Imbalan:</b> <span class="badge">${z.b}</span> + ${z.boss?30:20} poin per soal benar</p><p class="story">Syarat lulus: benar minimal 3 dari ${z.qs.length} tantangan.</p><button class="btn" onclick="next()">Mulai misi</button> <button class="btn alt" onclick="mapView()">Kembali ke peta</button></div>`}
+const TN={mc:'Pilihan ganda',mcx:'Pilihan ganda kompleks (bisa lebih dari satu jawaban)',tf:'Benar / Salah',dd:'Seret dan lepas (atau ketuk angka lalu ketuk kotak)',mt:'Menjodohkan',od:'Mengurutkan'};
+function qView(){const z=Z[C.z],q=z.qs[C.i-1],k=C.chk;let h=`<div class="card"><div class="bar"><i style="width:${(C.i-1)/z.qs.length*100}%"></i></div><div class="tag" style="margin-top:8px">${z.n} · Soal ${C.i} dari ${z.qs.length} · ${TN[q.t]}</div>`;
+ const ex=(q.t=='dd'?'':`<p><b>${q.q}</b></p>`);h+=ex;
+ if(q.t=='mc')q.o.forEach((o,j)=>{h+=`<button class="opt ${C.a===j?'sel':''} ${k?(j==q.a?'ok':C.a===j?'no':''):''}" ${k?'disabled':''} onclick="C.a=${j};qView()">${L[j]}. ${o}</button>`});
+ if(q.t=='mcx')q.o.forEach((o,j)=>{const on=C.a.includes(j),c=q.a.includes(j);h+=`<button class="opt ${on?'sel':''} ${k?(c?'ok':on?'no':''):''}" ${k?'disabled':''} onclick="tg(${j})">${on?'☑':'☐'} ${o}</button>`});
+ if(q.t=='tf')q.s.forEach((s,j)=>{h+=`<div class="row tf"><span>${s[0]}</span><span style="flex:none"><button class="${C.a[j]===1?'sel':''}" ${k?'disabled':''} onclick="C.a[${j}]=1;qView()">Benar</button><button class="${C.a[j]===0?'sel':''}" ${k?'disabled':''} onclick="C.a[${j}]=0;qView()">Salah</button></span></div>`+(k?`<div class="tag">${C.a[j]===s[1]?'✔ tepat':'✘ jawaban: '+(s[1]?'Benar':'Salah')}</div>`:'')});
+ if(q.t=='dd'){h+='<p><b>';q.q.forEach((p,j)=>{h+=p+(j<q.a.length?`<span class="slot ${C.a[j]!==null?'f':''}" tabindex="0" ondragover="event.preventDefault()" ondrop="dp(event,${j})" onclick="pl(${j})">${C.a[j]!==null?q.c[C.a[j]]:'&nbsp;'}</span>`:'')});h+='</b></p><div class="chips">';
+  q.c.forEach((c,j)=>{h+=`<button class="chip ${C.a.includes(j)?'used':''} ${sel===j?'on':''}" draggable="true" ${k?'disabled':''} ondragstart="event.dataTransfer.setData('t','${j}')" onclick="sel=${j};qView()">${c}</button>`});h+='</div>'}
+ if(q.t=='mt')q.l.forEach((l,j)=>{h+=`<div class="row"><span>${l}</span><select ${k?'disabled':''} aria-label="${l}" onchange="C.a[${j}]=this.value;qView()"><option value="">Pilih…</option>${C.m.map(r=>`<option ${C.a[j]===r?'selected':''}>${r}</option>`).join('')}</select></div>`+(k?`<div class="tag">${C.a[j]===q.r[j]?'✔':'✘ '+q.r[j]}</div>`:'')});
+ if(q.t=='od')C.a.forEach((v,p)=>{h+=`<div class="row"><span>${p+1}. ${q.s[v]}</span><button class="btn alt" ${k||p==0?'disabled':''} aria-label="Naik" onclick="mv(${p},-1)">↑</button><button class="btn alt" ${k||p==C.a.length-1?'disabled':''} aria-label="Turun" onclick="mv(${p},1)">↓</button></div>`});
+ if(k){h+=`<div class="fb ${C.r?'':'bad'}"><b>${C.r?'Benar! +'+(z.boss?30:20)+' poin':'Belum tepat.'}</b><br>${q.e}</div><p><button class="btn" onclick="next()">${C.i==z.qs.length?'Lihat hasil zona':'Lanjut'}</button></p>`}
+ else h+=`<p><button class="btn" onclick="chk()">Periksa jawaban</button></p>`;
+ app.innerHTML=h+'</div>'}
+function tg(j){const a=C.a,x=a.indexOf(j);x<0?a.push(j):a.splice(x,1);qView()}
+function pl(s){if(C.chk)return;if(C.a[s]!==null){C.a[s]=null}else if(sel!==null&&!C.a.includes(sel)){C.a[s]=sel;sel=null}qView()}
+function dp(e,s){e.preventDefault();const j=+e.dataTransfer.getData('t');if(!C.a.includes(j)){C.a[s]=j;qView()}}
+function mv(p,d){const a=C.a;[a[p],a[p+d]]=[a[p+d],a[p]];qView()}
+function chk(){const q=Z[C.z].qs[C.i-1],a=C.a;let r;
+ if(q.t=='mc')r=a===q.a;
+ else if(q.t=='mcx')r=[...a].sort().join()==q.a.join();
+ else if(q.t=='tf')r=q.s.every((s,j)=>a[j]===s[1]);
+ else if(q.t=='dd')r=q.a.every((v,j)=>a[j]===v);
+ else if(q.t=='mt')r=q.r.every((v,j)=>a[j]===v);
+ else r=a.every((v,j)=>v===j);
+ if(q.t=='mc'&&a===null||q.t=='dd'&&a.includes(null))return;
+ C.r=r;C.chk=1;if(r){C.ok++;S.sc[C.z]+=Z[C.z].boss?30:20}head();qView()}
+function result(){const z=Z[C.z],p=C.ok>=3,i=C.z;
+ if(p){S.done[i]=1;if(i+1==S.open&&i<3)S.open++}
+ const fin=p&&z.boss;
+ app.innerHTML=`<div class="card"><h2>${p?(fin?'Sang Kompas takluk!':'Zona selesai!'):'Belum lulus'}</h2><p>Benar ${C.ok} dari ${z.qs.length} tantangan. Poin zona: ${S.sc[i]}.</p>`+
+ (p?`<p><span class="badge">${z.b}</span></p>`:'<p>Butuh minimal 3 benar. Baca lagi pembahasan lalu coba lagi, poin zona ini diatur ulang.</p>')+
+ (fin?`<p><b>Total ${total()} poin.</b> Peringkat: ${total()>=300?'Kapten Sirkel':total()>=220?'Navigator Ulung':'Pelaut Tangguh'}. Kompas emas utuh kembali.</p>`:'')+
+ `<button class="btn" onclick="mapView()">Kembali ke peta</button> ${p?'':'<button class="btn alt" onclick="enter('+i+')">Ulangi zona</button>'}</div>`;head()}
+mapView();
+</script>
+</body>
+</html>
